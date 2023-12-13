@@ -1,0 +1,134 @@
+#include <iostream>
+using namespace std;
+
+class node {
+public:
+    int data;
+    node* next;
+    node* prev;
+};
+
+int traverse(node* n) {
+    int count = 0;
+    while (n) {
+        cout << n->data << " ";
+        count++;
+        n = n->next;
+    }
+    return count;
+}
+
+int size(node* sahil) {
+    int count = 0;
+    while (sahil) {
+        sahil = sahil->next;
+        count++;
+    }
+    return count;
+}
+
+node* insertathead(node* head, int n) {
+    node* ptr;
+    ptr = new node;
+    ptr->data = n;
+    ptr->next = head;
+    ptr->prev = nullptr;
+
+    if (head != nullptr) {
+        head->prev = ptr;
+    }
+
+    head = ptr;
+    return head;
+}
+
+node* insertatend(node* head, int n) {
+    node* ptr;
+    ptr = new node;
+    ptr->data = n;
+    ptr->next = nullptr;
+
+    if (head == nullptr) {
+        ptr->prev = nullptr;
+        head = ptr;
+        return head;
+    }
+
+    node* temp = head;
+    while (temp->next != nullptr) {
+        temp = temp->next;
+    }
+
+    temp->next = ptr;
+    ptr->prev = temp;
+    return head;
+}
+
+node* removefromhead(node* head) {
+    if (head == nullptr) {
+        cout << "List is empty.\n";
+        return head;
+    }
+
+    node* temp = head;
+    head = head->next;
+
+    if (head != nullptr) {
+        head->prev = nullptr;
+    }
+
+    delete temp;
+    return head;
+}
+
+node* removefromend(node* head) {
+    if (head == nullptr) {
+        cout << "List is empty.\n";
+        return head;
+    }
+
+    if (head->next == nullptr) {
+        delete head;
+        return nullptr;
+    }
+
+    node* temp = head;
+    while (temp->next != nullptr) {
+        temp = temp->next;
+    }
+
+    temp->prev->next = nullptr;
+    delete temp;
+    return head;
+}
+
+int main() {
+    node* head = nullptr;
+
+    head = insertathead(head, 33);
+    head = insertathead(head, 22);
+    head = insertathead(head, 11);
+
+    cout << "Original List: ";
+    traverse(head);
+    cout << "\n";
+
+    head = removefromhead(head);
+    cout << "List after removing from the beginning: ";
+    traverse(head);
+    cout << "\n";
+
+    head = insertatend(head, 44);
+    cout << "List after inserting at the end: ";
+    traverse(head);
+    cout << "\n";
+
+    head = removefromend(head);
+    cout << "List after removing from the end: ";
+    traverse(head);
+    cout << "\n";
+
+    // The rest of your code remains unchanged...
+
+    return 0;
+}
