@@ -1,0 +1,86 @@
+#include <iostream>
+
+class Node {
+public:
+    int data;
+    Node* next;
+
+    // Constructor
+    Node(int x) {
+        data = x;
+        next = nullptr;
+    }
+};
+
+class Queue {
+private:
+    Node* front;
+    Node* back;
+
+public:
+    // Constructor
+    Queue() {
+        front = nullptr;
+        back = nullptr;
+    }
+
+    // Enqueue operation
+    void enqueue(int x) {
+        Node* newNode = new Node(x);
+        if (isEmpty()) {
+            front = back = newNode;
+        } else {
+            back->next = newNode;
+            back = newNode;
+        }
+    }
+
+    // Dequeue operation
+    void dequeue() {
+        if (isEmpty()) {
+            std::cout << "Queue is empty. Cannot dequeue.\n";
+            return;
+        }
+
+        Node* temp = front;
+        front = front->next;
+        delete temp;
+    }
+
+    // Peek operation
+    int peek() const {
+        if (isEmpty()) {
+            std::cout << "Queue is empty. Cannot peek.\n";
+            return -1; // Assuming -1 as an invalid value for an empty queue
+        }
+        return front->data;
+    }
+
+    // Check if the queue is empty
+    bool isEmpty() const {
+        return front == nullptr;
+    }
+
+    // Destructor
+    ~Queue() {
+        while (!isEmpty()) {
+            dequeue();
+        }
+    }
+};
+
+int main() {
+    Queue myQueue;
+
+    myQueue.enqueue(1);
+    myQueue.enqueue(2);
+    myQueue.enqueue(3);
+
+    std::cout << "Front of the queue: " << myQueue.peek() << "\n";
+
+    myQueue.dequeue();
+
+    std::cout << "Front of the queue after dequeue: " << myQueue.peek() << "\n";
+
+    return 0;
+}
