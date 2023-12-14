@@ -1,0 +1,138 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+};
+
+Node* createNode(int x) {
+    Node* n = new Node;
+    n->data = x;
+    n->left = n->right = nullptr;
+    return n;
+}
+
+Node* insert(Node* root, int x) {
+    if (root == nullptr) {
+        return createNode(x);
+    }
+
+    if (x < root->data) {
+        root->left = insert(root->left, x);
+    } else if (x > root->data) {
+        root->right = insert(root->right, x);
+    }
+
+    return root;
+}
+
+Node* search(Node* root, int key) {
+    if (root == nullptr || root->data == key) {
+        return root;
+    }
+
+    if (key < root->data) {
+        return search(root->left, key);
+    }
+
+    return search(root->right, key);
+}
+
+Node* findMin(Node* root) {
+    while (root->left != nullptr) {
+        root = root->left;
+    }
+    return root;
+}
+
+Node* deleteNode(Node* root, int key) {
+    if (root == nullptr) {
+        return root;
+    }
+
+    if (key < root->data) {
+        root->left = deleteNode(root->left, key);
+    } else if (key > root->data) {
+        root->right = deleteNode(root->right, key);
+    } else {
+        if (root->left == nullptr) {
+            Node* temp = root->right;
+            delete root;
+            return temp;
+        } else if (root->right == nullptr) {
+            Node* temp = root->left;
+            delete root;
+            return temp;
+        }
+
+        Node* temp = findMin(root->right);
+        root->data = temp->data;
+        root->right = deleteNode(root->right, temp->data);
+    }
+
+    return root;
+}
+
+void preOrderTraversal(Node* root) {
+    if (root != nullptr) {
+        cout << root->data << " ";
+        preOrderTraversal(root->left);
+        preOrderTraversal(root->right);
+    }
+}
+
+void inOrderTraversal(Node* root) {
+    if (root != nullptr) {
+        inOrderTraversal(root->left);
+        cout << root->data << " ";
+        inOrderTraversal(root->right);
+    }
+}
+
+void postOrderTraversal(Node* root) {
+    if (root != nullptr) {
+        postOrderTraversal(root->left);
+        postOrderTraversal(root->right);
+        cout << root->data << " ";
+    }
+}
+
+int main() {
+    Node* root = nullptr;
+
+    root = insert(root, 2);
+    insert(root, 3);
+    insert(root, 4);
+    insert(root, 1);
+
+    cout << "Preorder Traversal: ";
+    preOrderTraversal(root);
+    cout << endl;
+
+    cout << "Inorder Traversal: ";
+    inOrderTraversal(root);
+    cout << endl;
+
+    cout << "Postorder Traversal: ";
+    postOrderTraversal(root);
+    cout << endl;
+
+    int keyToSearch = 3;
+    Node* result = search(root, keyToSearch);
+    if (result != nullptr) {
+        cout << keyToSearch << " found in the BST.\n";
+    } else {
+        cout << keyToSearch << " not found in the BST.\n";
+    }
+
+    int keyToDelete = 3;
+    root = deleteNode(root, keyToDelete);
+    cout << "After deleting " << keyToDelete << ":\n";
+    inOrderTraversal(root);
+    cout << endl;
+
+    return 0;
+}
